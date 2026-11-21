@@ -109,15 +109,17 @@ TEST(IntArrayTests, CopyAssignmentIsDeepAndFreesOld) {
 
 TEST(IntArrayTests, MoveAssignmentTakesBufferAndFreesOld) {
     AllocationTracker tracker;
-    Array a{10};
-    Array b{3};
-    b.fill(7);
-    std::size_t before = tracker.get_num_allocations();
-    a = std::move(b);
-    EXPECT_EQ(tracker.get_num_allocations(), before);
-    EXPECT_EQ(tracker.get_allocations().size(), 1u);
-    EXPECT_EQ(a.length(), 3);
-    EXPECT_EQ(a[2], 7);
+    {
+        Array a{10};
+        Array b{3};
+        b.fill(7);
+        std::size_t before = tracker.get_num_allocations();
+        a = std::move(b);
+        EXPECT_EQ(tracker.get_num_allocations(), before);
+        EXPECT_EQ(a.length(), 3);
+        EXPECT_EQ(a[2], 7);
+    }
+    EXPECT_TRUE(tracker.get_allocations().empty());
 }
 
 TEST(IntArrayTests, EmptyArray) {

@@ -58,7 +58,7 @@ Array<T>::Array() : len{0}, buf{nullptr} {
 }
 
 template <typename T>
-Array<T>::Array(int len) : len{len}, buf{new T[len]} {
+Array<T>::Array(int len) : len{len}, buf{new T[len]{}} {
 }
 
 template <typename T>
