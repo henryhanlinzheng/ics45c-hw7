@@ -23,3 +23,11 @@ TEST(IntArrayTests, SizedArrayReportsItsLength) {
 }
 
 // ADD YOUR TESTS HERE:
+
+TEST(IntArrayTests, FillSetsEveryElement) {
+    Array a{5};
+    a.fill(7);
+    for (int i = 0; i < a.length(); ++i) {
+        EXPECT_EQ(a[i], 7);
+    }
+}

@@ -45,13 +45,13 @@ TEST(IntArrayTests, Read) {
     EXPECT_EQ(arr[2], 3);
 }
 
-// TEST(IntArrayTests, Fill) {
-//     Array arr{10};
-//     arr.fill(20);
-//     EXPECT_EQ(arr[0], 20);
-//     arr.fill(5);
-//     EXPECT_EQ(arr[9], 5);
-// }
+TEST(IntArrayTests, Fill) {
+    Array arr{10};
+    arr.fill(20);
+    EXPECT_EQ(arr[0], 20);
+    arr.fill(5);
+    EXPECT_EQ(arr[9], 5);
+}
 //
 // TEST(IntArrayTests, OutOfBounds) {
 //     Array arr{10};
