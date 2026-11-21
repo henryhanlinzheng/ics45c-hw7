@@ -37,6 +37,9 @@ public:
 
     void fill(const T& val);
 
+    template <typename Fn>
+    void fill_with_fn(Fn fn);
+
 private:
     int len;
     T* buf;
@@ -120,6 +123,14 @@ template <typename T>
 void Array<T>::fill(const T& val) {
     for (int i = 0; i < len; ++i) {
         buf[i] = val;
+    }
+}
+
+template <typename T>
+template <typename Fn>
+void Array<T>::fill_with_fn(Fn fn) {
+    for (int i = 0; i < len; ++i) {
+        buf[i] = fn(i);
     }
 }
 
