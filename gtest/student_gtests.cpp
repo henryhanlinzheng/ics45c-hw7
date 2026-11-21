@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "int_array.hpp"
+#include "alloc.hpp"
 
 TEST(IntArrayTests, DefaultArrayIsEmpty) {
     const Array a;
@@ -41,4 +42,36 @@ TEST(IntArrayTests, SubscriptBounds) {
     EXPECT_THROW(a[3], std::string);
     EXPECT_THROW(c[-1], std::string);
     EXPECT_THROW(c[3], std::string);
+}
+
+TEST(IntArrayTests, CopyIsDeep) {
+    Array a{3};
+    a.fill(1);
+    Array b{a};
+    b[0] = 9;
+    EXPECT_EQ(b.length(), 3);
+    EXPECT_EQ(b[1], 1);
+    EXPECT_EQ(a[0], 1);
+}
+
+TEST(IntArrayTests, MoveTakesBufferWithoutAllocating) {
+    AllocationTracker tracker;
+    Array a{3};
+    a.fill(4);
+    std::size_t before = tracker.get_num_allocations();
+    Array b{std::move(a)};
+    EXPECT_EQ(tracker.get_num_allocations(), before);
+    EXPECT_EQ(b.length(), 3);
+    EXPECT_EQ(b[2], 4);
+}
+
+TEST(IntArrayTests, DestructorFreesBuffer) {
+    AllocationTracker tracker;
+    {
+        Array a{3};
+        Array b{a};
+        Array c{std::move(b)};
+    }
+    EXPECT_TRUE(tracker.get_allocations().empty());
+    EXPECT_EQ(tracker.get_mismatching_deletes(), 0u);
 }

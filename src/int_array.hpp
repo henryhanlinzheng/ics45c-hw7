@@ -16,11 +16,26 @@ public:
     }
 
     // TODO Step 4: copy constructor
+    Array(const Array& other) 
+        : len{other.len}, buf{new int[other.len]}
+    {
+        for (int i = 0; i < len; ++i) {
+            buf[i] = other.buf[i];
+        }
+    }
+
+    Array(Array&& other) noexcept
+        : len{std::exchange(other.len, 0)}, buf{std::exchange(other.buf, nullptr)} {
+    }
+
     // TODO Step 4: move constructor
     // TODO Step 5: friend void swap(Array& lhs, Array& rhs) noexcept
     // TODO Step 5: copy assignment
     // TODO Step 5: move assignment
     // TODO Step 4: destructor
+    ~Array() {
+        delete[] buf;
+    }
 
     int length() const {
         return len;
