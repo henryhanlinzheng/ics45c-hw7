@@ -31,3 +31,14 @@ TEST(IntArrayTests, FillSetsEveryElement) {
         EXPECT_EQ(a[i], 7);
     }
 }
+
+TEST(IntArrayTests, SubscriptBounds) {
+    Array a{3};
+    const Array& c = a;
+    EXPECT_NO_THROW(a[0]);
+    EXPECT_NO_THROW(a[2]);
+    EXPECT_THROW(a[-1], std::string);
+    EXPECT_THROW(a[3], std::string);
+    EXPECT_THROW(c[-1], std::string);
+    EXPECT_THROW(c[3], std::string);
+}
