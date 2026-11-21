@@ -24,14 +24,31 @@ public:
         }
     }
 
+    // TODO Step 4: move constructor
     Array(Array&& other) noexcept
         : len{std::exchange(other.len, 0)}, buf{std::exchange(other.buf, nullptr)} {
     }
 
-    // TODO Step 4: move constructor
     // TODO Step 5: friend void swap(Array& lhs, Array& rhs) noexcept
+    friend void swap(Array& lhs, Array& rhs) noexcept {
+        std::swap(lhs.len, rhs.len);
+        std::swap(lhs.buf, rhs.buf);
+    }
+
     // TODO Step 5: copy assignment
+    Array& operator=(const Array& other) {
+        Array copy{other};
+        swap(*this, copy);
+        return *this;
+    }
+
     // TODO Step 5: move assignment
+    Array& operator=(Array&& other) noexcept {
+        Array moved{std::move(other)};
+        swap(*this, moved);
+        return *this;
+    }
+
     // TODO Step 4: destructor
     ~Array() {
         delete[] buf;

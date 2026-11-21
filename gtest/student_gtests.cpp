@@ -75,3 +75,47 @@ TEST(IntArrayTests, DestructorFreesBuffer) {
     EXPECT_TRUE(tracker.get_allocations().empty());
     EXPECT_EQ(tracker.get_mismatching_deletes(), 0u);
 }
+
+TEST(IntArrayTests, SwapExchangesWithoutAllocating) {
+    AllocationTracker tracker;
+    Array a{3};
+    a.fill(1);
+    Array b{5};
+    b.fill(2);
+    std::size_t before = tracker.get_num_allocations();
+    swap(a, b);
+    EXPECT_EQ(tracker.get_num_allocations(), before);
+    EXPECT_EQ(a.length(), 5);
+    EXPECT_EQ(a[4], 2);
+    EXPECT_EQ(b.length(), 3);
+    EXPECT_EQ(b[2], 1);
+}
+
+TEST(IntArrayTests, CopyAssignmentIsDeepAndFreesOld) {
+    AllocationTracker tracker;
+    Array a{10};
+    Array b{3};
+    b.fill(7);
+    a = b;
+    EXPECT_EQ(tracker.get_allocations().size(), 2u);
+    a[0] = 9;
+    EXPECT_EQ(a.length(), 3);
+    EXPECT_EQ(a[2], 7);
+    EXPECT_EQ(b[0], 7);
+    a = a;
+    EXPECT_EQ(a.length(), 3);
+    EXPECT_EQ(a[0], 9);
+}
+
+TEST(IntArrayTests, MoveAssignmentTakesBufferAndFreesOld) {
+    AllocationTracker tracker;
+    Array a{10};
+    Array b{3};
+    b.fill(7);
+    std::size_t before = tracker.get_num_allocations();
+    a = std::move(b);
+    EXPECT_EQ(tracker.get_num_allocations(), before);
+    EXPECT_EQ(tracker.get_allocations().size(), 1u);
+    EXPECT_EQ(a.length(), 3);
+    EXPECT_EQ(a[2], 7);
+}
