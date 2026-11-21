@@ -43,6 +43,16 @@ Matrix<T>::Matrix(int rows, int cols) : rows{rows}, cols{cols}, data{rows} {
 }
 
 template <typename T>
+Array<T>& Matrix<T>::operator[](int row) {
+    return data[row];
+}
+
+template <typename T>
+const Array<T>& Matrix<T>::operator[](int row) const {
+    return data[row];
+}
+
+template <typename T>
 int Matrix<T>::num_rows() const {
     return rows;
 }
