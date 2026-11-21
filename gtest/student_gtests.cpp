@@ -119,3 +119,25 @@ TEST(IntArrayTests, MoveAssignmentTakesBufferAndFreesOld) {
     EXPECT_EQ(a.length(), 3);
     EXPECT_EQ(a[2], 7);
 }
+
+TEST(IntArrayTests, EmptyArray) {
+    Array a;
+    EXPECT_THROW(a[0], std::string);
+    a.fill(3);
+    Array b{a};
+    EXPECT_EQ(b.length(), 0);
+    Array c{2};
+    c = a;
+    EXPECT_EQ(c.length(), 0);
+}
+
+TEST(IntArrayTests, OneElementArray) {
+    Array a{1};
+    a.fill(8);
+    EXPECT_EQ(a[0], 8);
+    EXPECT_THROW(a[1], std::string);
+    EXPECT_THROW(a[-1], std::string);
+    Array b{std::move(a)};
+    EXPECT_EQ(b.length(), 1);
+    EXPECT_EQ(b[0], 8);
+}
