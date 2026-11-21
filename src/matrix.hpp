@@ -62,4 +62,19 @@ int Matrix<T>::num_cols() const {
     return cols;
 }
 
+template <typename T>
+void Matrix<T>::fill(const T& val) {
+    for (int i = 0; i < rows; ++i) {
+        data[i].fill(val);
+    }
+}
+
+template <typename T>
+template <typename Fn>
+void Matrix<T>::fill_with_fn(Fn fn) {
+    for (int i = 0; i < rows; ++i) {
+        data[i].fill_with_fn([&](int j) { return fn(i, j); });
+    }
+}
+
 #endif
